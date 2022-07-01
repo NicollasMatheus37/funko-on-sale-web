@@ -14,7 +14,7 @@ import { Menubar } from 'primereact/menubar';
 import { RadioButton } from 'primereact/radiobutton';
 import { InputNumber } from 'primereact/inputnumber';
 import { margin } from '@mui/system';
-
+import api from '../../api/api.js'
 // caro vine, vou por o link da documentacao aqui do prime pra vc olhar as paradas de pegar os valores dos campos e radio botao:
 // https://www.primefaces.org/primereact/
 // estava mto legal fazer isso mas tenho que ver umas paradas de xamarin
@@ -23,6 +23,7 @@ import { margin } from '@mui/system';
 const Adicionar = () => {
     const [showMessage, setShowMessage] = useState(false);
     const [formData, setFormData] = useState({});
+    const [forSales, setForSales] = useState(false);
 
     const items = [{
         label: "Voltar",
@@ -51,7 +52,15 @@ const Adicionar = () => {
         onSubmit: (data) => {
             setFormData(data);
             setShowMessage(true);
+            let obj = {
+                name: data.name,
+                description: data.descricao,
+                value: data.value //precisa colocar o campo que pega o valor aqui eu nao encontrei qual é
+            }
 
+            api.post('/funkos', {obj}).then(data => {
+
+            })
             formik.resetForm();
         }
     });
@@ -60,8 +69,6 @@ const Adicionar = () => {
     const getFormErrorMessage = (name) => {
         return isFormFieldValid(name) && <small className="p-error">{formik.errors[name]}</small>;
     };
-
-    
 
     const dialogFooter = <div className="flex justify-content-center"><Button label="OK" className="p-button-text" autoFocus onClick={() => setShowMessage(false)} /></div>;
     const passwordHeader = <h6>Pick a password</h6>;
@@ -114,7 +121,7 @@ const Adicionar = () => {
                             </div>
                             <div className="field">
                                 <span className="p-float-label">
-                                <InputNumber className={classNames({ 'p-invalid': isFormFieldValid('name') })} min={0} required showButtons mode="currency" currency="BRL" />
+                                    <InputNumber className={classNames({ 'p-invalid': isFormFieldValid('name') })} min={0} required showButtons mode="currency" currency="BRL" />
                                     <label htmlFor="preco" className={classNames({ 'p-error': isFormFieldValid('name') })}></label>
                                 </span>
                                 {getFormErrorMessage('name')}
@@ -122,20 +129,20 @@ const Adicionar = () => {
                             <h5 className="text-center">À VENDA:</h5>
                             <div>
                                 <span>
-                                <RadioButton className={classNames({ 'p-invalid': isFormFieldValid('name') })} min={0} required showButtons mode="currency" currency="BRL" />
+                                    <RadioButton className={classNames({ 'p-invalid': isFormFieldValid('name') })} min={0} name="isForSale" value="isForSale" onChange={e => setForSales(e.value)} checked={forSales === 'isForSale'} required showButtons mode="currency" currency="BRL" />
                                     <label htmlFor="preco" className={classNames({ 'p-error': isFormFieldValid('name') })}> Sim</label>
 
                                 </span>
                                 {getFormErrorMessage('name')}
                             </div>
-                            <div style={{marginTop: "10px"}} >
+                            <div style={{ marginTop: "10px" }} >
                                 <span>
-                                <RadioButton className={classNames({ 'p-invalid': isFormFieldValid('name') })} name="venda"  value="val1" onChange={(e) => setValue(e.value)} />
+                                    <RadioButton className={classNames({ 'p-invalid': isFormFieldValid('name') })} name="isNotForSale" value="isNotForSale" onChange={e => setForSales(e.value)} checked={forSales === 'isNotForSale'} />
                                     <label> Não</label>
                                 </span>
                                 {getFormErrorMessage('name')}
                             </div>
-                            
+
                             <Button type="submit" label="Enviar" className="mt-2" />
                         </form>
                     </div>

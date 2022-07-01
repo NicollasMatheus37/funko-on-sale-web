@@ -4,7 +4,7 @@ import TextField from "@mui/material/TextField";
 import LoginIcon from "@mui/icons-material/Login";
 import Card from "@mui/material/Card";
 import Button from "@mui/material/Button";
-
+import api from '../../api/api.js'
 import "../../styles/cardPage.css";
 
 function Login() {
@@ -18,6 +18,15 @@ function Login() {
   function handleLogin() {
     if (!username || !password) return alert("Preencha todos os campos");
     //mandar os dados para o backend
+    let obj = {
+      username: username,
+      password: password
+    }
+    api.get(`users/authenticate`, {obj}).then(data => {
+      if (data.status == 200) {
+        navigate("../store")
+      }
+    })
   }
 
   return (

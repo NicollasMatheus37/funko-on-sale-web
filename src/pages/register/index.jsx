@@ -4,7 +4,7 @@ import TextField from "@mui/material/TextField";
 import HowToRegIcon from "@mui/icons-material/HowToReg";
 import Card from "@mui/material/Card";
 import Button from "@mui/material/Button";
-
+import api from '../../api/api.js'
 import "../../styles/cardPage.css";
 
 function Register() {
@@ -20,6 +20,11 @@ function Register() {
     e.preventDefault();
 
     //manda os dados para o backend cadastrar
+    api.post("/users",{password, email, name}, {}).then(data => {
+      if (data.status == 200) {
+        navigate("../login")
+      }
+    })
   }
 
   return (
